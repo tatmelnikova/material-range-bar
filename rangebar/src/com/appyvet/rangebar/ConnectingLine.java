@@ -59,6 +59,31 @@ public class ConnectingLine {
         mY = y;
     }
 
+    /**
+     * Constructor for connecting line with Paint.Cap type
+     * * @param ctx                  the context for the line
+     * @param y                    the y co-ordinate for the line
+     * @param connectingLineWeight the weight of the line
+     * @param connectingLineColor  the color of the line
+     * @param capType the type of Paint.Cap
+     */
+    public ConnectingLine(Context ctx, float y, float connectingLineWeight,
+                          int connectingLineColor, Paint.Cap capType) {
+        final Resources res = ctx.getResources();
+
+        float connectingLineWeight1 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                connectingLineWeight,
+                res.getDisplayMetrics());
+
+        // Initialize the paint, set values
+        mPaint = new Paint();
+        mPaint.setColor(connectingLineColor);
+        mPaint.setStrokeWidth(connectingLineWeight1);
+        mPaint.setStrokeCap(capType);
+        mPaint.setAntiAlias(true);
+
+        mY = y;
+    }
     // Package-Private Methods /////////////////////////////////////////////////
 
     /**

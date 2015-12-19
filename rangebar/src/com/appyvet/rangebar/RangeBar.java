@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -90,6 +91,8 @@ public class RangeBar extends View {
     // Corresponds to material indigo 500.
     private static final int DEFAULT_CONNECTING_LINE_COLOR = 0xff3f51b5;
 
+    private static final Paint.Cap DEFAULT_CONNECTING_LINE_CAP_TYPE = Paint.Cap.ROUND;
+
     private static final float DEFAULT_EXPANDED_PIN_RADIUS_DP = 12;
 
     private static final float DEFAULT_CIRCLE_SIZE_DP = 5;
@@ -117,6 +120,8 @@ public class RangeBar extends View {
     private float mConnectingLineWeight = DEFAULT_CONNECTING_LINE_WEIGHT_PX;
 
     private int mConnectingLineColor = DEFAULT_CONNECTING_LINE_COLOR;
+
+    private Paint.Cap mConnectingLineCapType = DEFAULT_CONNECTING_LINE_CAP_TYPE;
 
     private float mThumbRadiusDP = DEFAULT_EXPANDED_PIN_RADIUS_DP;
 
@@ -236,6 +241,8 @@ public class RangeBar extends View {
         bundle.putInt("BAR_COLOR", mBarColor);
         bundle.putFloat("CONNECTING_LINE_WEIGHT", mConnectingLineWeight);
         bundle.putInt("CONNECTING_LINE_COLOR", mConnectingLineColor);
+        bundle.putInt("CONNECTING_LINE_CAP_TYPE", mConnectingLineCapType);
+
 
         bundle.putFloat("CIRCLE_SIZE", mCircleSize);
         bundle.putInt("CIRCLE_COLOR", mCircleColor);
@@ -275,6 +282,7 @@ public class RangeBar extends View {
             mCircleColor = bundle.getInt("CIRCLE_COLOR");
             mConnectingLineWeight = bundle.getFloat("CONNECTING_LINE_WEIGHT");
             mConnectingLineColor = bundle.getInt("CONNECTING_LINE_COLOR");
+            mConnectingLineCapType = bundle.getInt("CONNECTING_LINE_CAP_TYPE");
 
             mThumbRadiusDP = bundle.getFloat("THUMB_RADIUS_DP");
             mExpandedPinRadius = bundle.getFloat("EXPANDED_PIN_RADIUS_DP");
@@ -386,7 +394,7 @@ public class RangeBar extends View {
 
         // Create the line connecting the two thumbs.
         mConnectingLine = new ConnectingLine(ctx, yPos, mConnectingLineWeight,
-                mConnectingLineColor);
+                mConnectingLineColor, mConnectingLineCapType);
     }
 
     @Override
@@ -737,6 +745,15 @@ public class RangeBar extends View {
     }
 
     /**
+     * Set the Paint.Cap.Type of the connecting line between the thymbs
+     * @param Paint.Cap specifying the type of the Paint.Cap of the connecting line
+     */
+    public void setDefaultConnectingLineCapType(Paint.Cap capType){
+        mConnectingLineCapType = capType;
+        createConnectingLine();
+    }
+
+    /**
      * Set the color of the connecting line between the thumbs.
      *
      * @param connectingLineColor Integer specifying the color of the connecting
@@ -1077,6 +1094,8 @@ public class RangeBar extends View {
                     DEFAULT_CONNECTING_LINE_WEIGHT_PX);
             mConnectingLineColor = ta.getColor(R.styleable.RangeBar_connectingLineColor,
                     DEFAULT_CONNECTING_LINE_COLOR);
+            mConnectingLineCapType = ta.getInt(R.styleable.RangeBar_connectingLineCapType,
+                    DEFAULT_CONNECTING_LINE_CAP_TYPE);
             mActiveConnectingLineColor = mConnectingLineColor;
             mExpandedPinRadius = ta
                     .getDimension(R.styleable.RangeBar_pinRadius, TypedValue.applyDimension(
@@ -1127,7 +1146,8 @@ public class RangeBar extends View {
         mConnectingLine = new ConnectingLine(getContext(),
                 getYPos(),
                 mConnectingLineWeight,
-                mConnectingLineColor);
+                mConnectingLineColor,
+                mConnectingLineCapType);
         invalidate();
     }
 
